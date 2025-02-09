@@ -33,7 +33,7 @@ export default clerkMiddleware(async (auth, req) =>{
         }
 
         // if the request is for a protected API and the user is not logged in.
-        if(isApiRequest && isPublicApiRoute(req)){
+        if(isApiRequest && !isPublicApiRoute(req)){
             return NextResponse.redirect(new URL("/sign-in", req.url))
         }
     }
