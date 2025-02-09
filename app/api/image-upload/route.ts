@@ -16,12 +16,21 @@ interface CloudinaryUploadResult {
 }
 
 export async function POST(request: NextRequest){
-    const {userId} = await auth();
-    if(!userId){
-        return NextResponse.json({error:"Unauthorized access",status: 401})
-    }   
-
     try{
+        const {userId} = await auth();
+        // User logged in or not. 
+        if(!userId){
+            return NextResponse.json({error:"Unauthorized access",status: 401})
+        } 
+    
+        // Cloudinary credentials checking
+        if(
+            !process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
+            !process.env.CLOUDINARY_API_KEY ||
+            !process.env.CLOUDINARY_API_SECRET
+        ){
+            return NextResponse.json({error:"Cloudinary credentials not found"}, {status: 500})
+        }
         const formData = await request.formData();
         const file = formData.get("file") as File | null
 
