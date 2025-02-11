@@ -8,15 +8,24 @@ import 'react-toastify/dist/ReactToastify.css';
 function VideoUpload() {
 
   const [file, setFile] = useState<File | null>(null);
-  const [title, setTitle] = useState("");
-  const [description , setDescription] = useState("");
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [prompt, setPrompt] = useState<string>("");
+  const [numInferenceSteps, setNumInferenceSteps] = useState<number>(0);
+  const [seed, setSeed] = useState<number>(0);
+  const [proMode, setProMode] = useState<boolean>(false);
+  const [aspectRatio, setAspectRatio] = useState<string>("16:9");
+  const [resolution, setResolution] = useState<number>(480);
+  const [numFrames, setNumFrames] = useState<number>(129);
+  const [safetyEnabled, setSafetyEnabled] = useState<boolean>(true);
+  const [strength, setStrength] = useState<number>(0.85);
   const [isUploading, setIsUploading] = useState(false);
 
   const router = useRouter();
 
   // Max file size 70 mb
-
   const MAX_FILE_SIZE = 70 * 1024 * 1024;
+  const MAX_NUM_INFERENCE_STEPS = 30;
 
   const handleSubmit = async (e:React.FormEvent) => {
     e.preventDefault();
@@ -50,58 +59,195 @@ function VideoUpload() {
       setIsUploading(true);
     }
   }
+  const handleRandomSeed = () => {
+    const randomSeed = Math.floor(Math.random() * 10000);
+    setSeed(randomSeed);
+  };
 
   return (
-    <div className='container mx-auto p-4'>
+    <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Upload Video</h1>
-      <form onSubmit={handleSubmit} className='space-y-4'>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Title */}
         <div>
-          <label className='label'>
-            <span className='label-text'>Title</span>            
+          <label className="label">
+            <span className="label-text">Title</span>
           </label>
-          <input 
+          <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className='input input-bordered w-full'
+            className="input input-bordered w-full"
             required
           />
         </div>
+
+        {/* Description */}
         <div>
           <label className="label">
-            <span className='label-text'>
-              Description
-            </span>
+            <span className="label-text">Description</span>
           </label>
-          <textarea 
+          <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className='textarea textarea-bordered w-full'
+            className="textarea textarea-bordered w-full"
           />
         </div>
+
+        {/* Prompt */}
         <div>
-        <label className="label">
-            <span className='label-text'>
-              Video File
-            </span>
+          <label className="label">
+            <span className="label-text">Prompt</span>
           </label>
-          <input 
-            type="file" 
-            accept='video/*'
+          <textarea
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            className="textarea textarea-bordered w-full"
+          />
+        </div>
+
+        {/* Num Inference Steps */}
+        <div>
+          <label className="label">
+            <span className="label-text">Num Inference Steps: {numInferenceSteps}</span>
+          </label>
+          <input
+            type="range"
+            min="1"
+            max="30"
+            step="1"
+            value={numInferenceSteps}
+            onChange={(e) => setNumInferenceSteps(Number(e.target.value))}
+            className="range range-primary w-full"
+          />
+        </div>
+
+        {/* Seed with Random Button */}
+        <div className="flex items-center space-x-2">
+          <div className="flex-1">
+            <label className="label">
+              <span className="label-text">Seed</span>
+            </label>
+            <input
+              type="number"
+              value={seed}
+              onChange={(e) => setSeed(Number(e.target.value))}
+              className="input input-bordered w-full"
+            />
+          </div>
+          <button type="button" onClick={handleRandomSeed} className="btn btn-accent mt-6">
+            Random
+          </button>
+        </div>
+
+        {/* Pro Mode */}
+        <div>
+          <label className="label">
+            <span className="label-text">Pro Mode</span>
+          </label>
+          <input
+            type="checkbox"
+            checked={proMode}
+            onChange={(e) => setProMode(e.target.checked)}
+            className="toggle toggle-primary"
+          />
+        </div>
+
+        {/* Aspect Ratio */}
+        <div>
+          <label className="label">
+            <span className="label-text">Aspect Ratio (W:H)</span>
+          </label>
+          <select
+            value={aspectRatio}
+            onChange={(e) => setAspectRatio(e.target.value)}
+            className="select select-bordered w-full"
+          >
+            <option value="16:9">16:9</option>
+            <option value="9:16">9:16</option>
+          </select>
+        </div>
+
+        {/* Resolution */}
+        <div>
+          <label className="label">
+            <span className="label-text">Resolution</span>
+          </label>
+          <select
+            value={resolution}
+            onChange={(e) => setResolution(Number(e.target.value))}
+            className="select select-bordered w-full"
+          >
+            <option value={480}>480</option>
+            <option value={580}>580</option>
+            <option value={720}>720</option>
+          </select>
+        </div>
+
+        {/* Number of Frames */}
+        <div>
+          <label className="label">
+            <span className="label-text">Number of Frames</span>
+          </label>
+          <select
+            value={numFrames}
+            onChange={(e) => setNumFrames(Number(e.target.value))}
+            className="select select-bordered w-full"
+          >
+            <option value={129}>129</option>
+            <option value={85}>85</option>
+          </select>
+        </div>
+
+        {/* Enable Safety Checker */}
+        <div>
+          <label className="label">
+            <span className="label-text">Enable Safety Checker</span>
+          </label>
+          <input
+            type="checkbox"
+            checked={safetyEnabled}
+            onChange={(e) => setSafetyEnabled(e.target.checked)}
+            className="toggle toggle-primary"
+          />
+        </div>
+
+        {/* Strength */}
+        <div>
+          <label className="label">
+            <span className="label-text">Strength: {strength}</span>
+          </label>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.1"
+            value={strength}
+            onChange={(e) => setStrength(Number(e.target.value))}
+            className="range range-primary w-full"
+          />
+        </div>
+
+        {/* Video File Upload */}
+        <div>
+          <label className="label">
+            <span className="label-text">Video File</span>
+          </label>
+          <input
+            type="file"
+            accept="video/*"
             onChange={(e) => setFile(e.target.files?.[0] || null)}
-            className='file-input file-input-bordered w-full'
+            className="file-input file-input-bordered w-full"
             required
           />
         </div>
-        <button
-          type='submit'
-          className='btn btn-primary'
-          disabled={isUploading}
-        >{isUploading? "Uploading...": "Upload Video"}</button>
-      </form>      
-       
+
+        <button type="submit" className="btn btn-primary" disabled={isUploading}>
+          {isUploading ? "Uploading..." : "Upload Video"}
+        </button>
+      </form>
     </div>
-  )
+  );
 }
 
 export default VideoUpload
