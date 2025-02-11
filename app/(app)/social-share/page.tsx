@@ -1,8 +1,8 @@
 'use client'
-
-
 import React, {useState, useEffect, useRef } from 'react'
 import { CldImage } from 'next-cloudinary'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const socialFormats = {
   "Instagram Square (1:1)": {width:1080, height:1080, aspectRation:"1:1"},
@@ -46,17 +46,18 @@ function SocialShare() {
       })
 
       if(!response.ok){
-        throw new Error("Failed to upload image");
-
-        const data = await response.json();
-        setUploadedImage(data.publicId) 
+        throw new Error("Failed to upload image");     
+         
       }
+      const data = await response.json();
+      setUploadedImage(data.publicId)
     }catch(error){
       console.log(error);
-      alert('Failed to upload image')
+      toast.error("Failed to upload image, try again.")      
     }
     finally{
       setIsUploading(false)
+      toast.success("File uploaded successfully.")
     }
   }
 
@@ -75,7 +76,7 @@ function SocialShare() {
       link.click()
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
-      document.body.removeChild(link)  
+        
     })
   }
 
