@@ -1,6 +1,6 @@
 'use client'
 import React,{useState} from 'react'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,21 +11,21 @@ function VideoUpload() {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [prompt, setPrompt] = useState<string>("");
-  const [numInferenceSteps, setNumInferenceSteps] = useState<number>(0);
+  const [numInferenceSteps, setNumInferenceSteps] = useState<number>(1);
   const [seed, setSeed] = useState<number>(0);
   const [proMode, setProMode] = useState<boolean>(false);
   const [aspectRatio, setAspectRatio] = useState<string>("16:9");
-  const [resolution, setResolution] = useState<number>(480);
+  const [resolution, setResolution] = useState<string>("480");
   const [numFrames, setNumFrames] = useState<number>(129);
   const [safetyEnabled, setSafetyEnabled] = useState<boolean>(true);
   const [strength, setStrength] = useState<number>(0.85);
   const [isUploading, setIsUploading] = useState(false);
 
-  const router = useRouter();
+  // const router = useRouter();
 
   // Max file size 70 mb
   const MAX_FILE_SIZE = 70 * 1024 * 1024;
-  const MAX_NUM_INFERENCE_STEPS = 30;
+
 
   const handleSubmit = async (e:React.FormEvent) => {
     e.preventDefault();
@@ -42,20 +42,31 @@ function VideoUpload() {
     formData.append("title",title);
     formData.append("description",description);
     formData.append("originalSize",file.size.toString());
+    formData.append("prompt", prompt)
+    formData.append("numInferenceSteps", numInferenceSteps.toString())
+    formData.append("seed", seed.toString())
+    formData.append("proMode", proMode.toString())
+    formData.append("aspectRatio", aspectRatio)
+    formData.append("resolution", resolution)
+    formData.append("numFrames", numFrames.toString())
+    formData.append("safetyEnabled", safetyEnabled.toString())
+    formData.append("safetyEnabled", safetyEnabled.toString())
+    formData.append("strength", strength.toString())
+
 
     try{
         const response = await axios.post("/api/video-upload", formData);
 
         //Check 200 response.
         if(response.status === 200 ){
-          console.log("Upload successfull", response.data)
-          toast.success("Video upload successfull.");
+          console.log("Upload successfull", response.data)          
         }
 
     }catch(error){
       console.log("Error while uploading video ",error)
       toast.error("Video upload unsuccessfull, please try again.")
     }finally{
+      toast.success("Video uploaded successfully.")
       setIsUploading(true);
     }
   }
@@ -103,6 +114,7 @@ function VideoUpload() {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             className="textarea textarea-bordered w-full"
+            required
           />
         </div>
 
@@ -175,7 +187,7 @@ function VideoUpload() {
           </label>
           <select
             value={resolution}
-            onChange={(e) => setResolution(Number(e.target.value))}
+            onChange={(e) => setResolution(e.target.value)}
             className="select select-bordered w-full"
           >
             <option value={480}>480</option>

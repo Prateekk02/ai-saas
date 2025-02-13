@@ -18,6 +18,8 @@ model Video{
   title String 
   description String?
   publicId String
+  originalUrl String
+  transformedUrl String
   originalSize String
   compressedSize String
   duration Float
@@ -25,8 +27,8 @@ model Video{
   numInferenceSteps Int 
   seed Int 
   proMode Boolean
-  aspectRation String
-  resolution Int
+  aspectRatio String
+  resolution String
   numFrames Int
   enableSafetyChecker Boolean
   strength Float

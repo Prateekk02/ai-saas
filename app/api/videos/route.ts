@@ -11,8 +11,7 @@ export async function GET(request:NextRequest){
     }catch(error){
         console.log(error)
         return NextResponse.json({
-            message: "Error fetching videos",
-            status: 500 
-        })
+            message: "Error fetching videos"           
+        },{ status: 500 })
     }
 }

@@ -77,7 +77,7 @@ const VideoCard: React.FC<VideoCardProps> = ({video, onDownload}) => {
         onMouseLeave={() =>setIsHovered(false)}   
     >
     <figure className='aspect-video relative'>
-    {
+    {/* {
         isHovered ? 
         (previewError ?
             (<div className="w-full h-full flex items-center justify-center bg-gray-200"><p className='text-red-500'>Preview not available</p></div>):
@@ -89,7 +89,31 @@ const VideoCard: React.FC<VideoCardProps> = ({video, onDownload}) => {
                 height={300} // Adjust height according to your needs
                 className="w-full h-full object-cover"
                 />)
-    }
+    } */}
+    { isHovered ? 
+  (previewError ?
+    (<div className="w-full h-full flex items-center justify-center bg-gray-200">
+      <p className='text-red-500'>Preview not available</p>
+    </div>) :
+    (
+      <video 
+        src={video.transformedUrl ? video.transformedUrl : getPreviewVideoUrl(video.publicId)} 
+        autoPlay 
+        muted 
+        loop 
+        className='w-full h-full object-cover' 
+        onError={handlePreviewError} 
+      />
+    )
+  ) :
+  (<Image
+    src={getThumbnailUrl(video.publicId)}
+    alt={video.title}
+    width={500}
+    height={300}
+    className="w-full h-full object-cover"
+  />)
+}
 
     </figure>
     <div className="card-body p-4">
@@ -121,16 +145,25 @@ const VideoCard: React.FC<VideoCardProps> = ({video, onDownload}) => {
                 Compression:{" "}
                 <span className="text-accent">{compressedPercentage}%</span>
               </div>
-              <button
+              {/* <button
                 className="btn btn-primary btn-sm"
                 onClick={() =>
                   onDownload(getFullVideoUrl(video.publicId), video.title)
                 }
               >
                 <Download size={16} />
-              </button>
-            </div>
+              </button> */}
+            
+          <button
+            className="btn btn-primary btn-sm"
+            onClick={() =>
+              onDownload(getFullVideoUrl(video.publicId), video.title)
+            }
+          >
+            <Download size={16} />
+          </button>
           </div>
+          </div> 
 
     </div>
   )
