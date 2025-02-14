@@ -3,7 +3,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { auth } from '@clerk/nextjs/server';
 import {prisma} from "@/lib/prisma"
 import axios from 'axios';
-import { fal } from "@fal-ai/client";
+
 
 
 
@@ -25,7 +25,14 @@ interface CloudinaryUploadResult {
 interface FalSubmissionResponse {
     request_id: string;
     message: string;
-  }
+}
+
+interface TransformedVideoResponse {
+    video: {
+      url: string;
+    };
+}
+  
 
 export async function POST(request: NextRequest){
     try{
@@ -121,10 +128,13 @@ export async function POST(request: NextRequest){
         } 
 
         const response = await axios.post<FalSubmissionResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/api/api-fal`,payload)
-        const {request_id} = response.data      
-        const transformedVideo = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/get-transformed-video`, request_id)
+        const {request_id} = response.data   
+        console.log(request_id)   
+        const transformedVideo = await axios.post<TransformedVideoResponse>(`${process.env.NEXT_PUBLIC_BASE_URL}/api/get-transformed-video`, {request_id})
 
         const apiResponse = transformedVideo.data
+
+        console.log(apiResponse)
 
         const fetchResult = await cloudinary.uploader.upload(apiResponse, {
             resource_type: "video",
@@ -156,9 +166,7 @@ export async function POST(request: NextRequest){
             },
             });
 
-            return NextResponse.json(          
-            video
-        )
+            return NextResponse.json(video)
 
     }catch(error){
         console.error("Upload video failed :: ", error);
