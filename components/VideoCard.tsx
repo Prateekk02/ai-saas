@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react'
 import { getCldImageUrl, getCldVideoUrl } from 'next-cloudinary'
 import Image from "next/image";
-import {Download, Clock, FileDown, FileUp} from 'lucide-react'
+import {Download,  FileDown, FileUp} from 'lucide-react'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import {filesize} from 'filesize'
@@ -54,12 +54,12 @@ const VideoCard: React.FC<VideoCardProps> = ({video, onDownload}) => {
         return filesize(size)
     },[])
 
-    const formatDuration = useCallback((seconds: number)=>{
-        const minutes = Math.floor(seconds/60);
-        const remainingSeconds = Math.round(seconds % 60);
+    // const formatDuration = useCallback((seconds: number)=>{
+    //     const minutes = Math.floor(seconds/60);
+    //     const remainingSeconds = Math.round(seconds % 60);
 
-        return `${minutes}:${remainingSeconds.toString().padStart(2,'0')}`;
-    },[])
+    //     return `${minutes}:${remainingSeconds.toString().padStart(2,'0')}`;
+    // },[])
 
     const compressedPercentage = Math.round((1-Number(video.compressedSize)/Number(video.originalSize)) * 100)
 

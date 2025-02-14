@@ -19,14 +19,14 @@ function Home() {
       }else{
         throw new Error("Unexpected response format.")
       }
-    }catch(error){
-      console.log("Failed to load videos: ",error)
+    }catch(e){
       setError("Failed to fetch video")
+      console.log(`Failed to load videos: ${e} :: ${error} `,)
 
     }finally{
       setLoading(false);
     }
-  },[])
+  },[error])
 
   useEffect(() => {
     fetchVideo()

@@ -7,12 +7,12 @@ import { auth } from '@clerk/nextjs/server';
 cloudinary.config({ 
     cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, 
     api_key: process.env.CLOUDINARY_API_KEY, 
-    api_secret: process.env.CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
+    api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
 interface CloudinaryUploadResult {
     public_id : string,
-    [key: string] : any
+    [key: string] : unknown
 }
 
 export async function POST(request: NextRequest){

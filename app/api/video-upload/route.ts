@@ -13,7 +13,8 @@ cloudinary.config({
 
 interface CloudinaryUploadResult {
     public_id : string,
-    [key: string] : any,
+    
+    [key: string] : unknown,
     bytes: number,
     duration?: number 
 }
@@ -72,7 +73,6 @@ export async function POST(request: NextRequest){
         )
 
         const video = await prisma.video.create({
-
             data: {
                 title,
                 description,
