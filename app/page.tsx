@@ -2,7 +2,7 @@
 import  { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-function Home() {
+function LandingPage() {
   const router = useRouter();
 
   useEffect(() => {
@@ -14,4 +14,4 @@ function Home() {
   return null;
 }
 
-export default Home;
+export default LandingPage;
