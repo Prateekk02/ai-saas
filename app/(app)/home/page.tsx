@@ -42,9 +42,18 @@ function Home() {
     document.body.removeChild(link)
   },[])
 
-  if(loading){
-    return <VideoCardSkeleton/>
+  if (loading) {
+    const skeletonCount = 6; // Adjust this based on your layout needs
+  
+    return (
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+        {[...Array(skeletonCount)].map((_, index) => (
+          <VideoCardSkeleton key={index} />
+        ))}
+      </div>
+    );
   }
+  
   return (
     <div className='container mx-auto p-4'>
       <h1 className="text-2xl font-bold mb-4">Videos</h1>
